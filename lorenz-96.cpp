@@ -31,7 +31,7 @@ std::vector<double> muler(std::vector<double> v1, double s){
 }
 void printer(std::vector<double> v){
     rep(i, v.size()-1){
-        std::cout << v[i] << ",";
+        std::cout << v[i] << " ";
     }
     std::cout << v[v.size()-1]<< std::endl;
 }
@@ -55,10 +55,10 @@ std::vector<double> lorenz96(std::vector<double> v,std::vector<double> k,double 
 
 int main(){
     //定義
-    int N = 10;
+    int N = 100;
     double F = 8.0;
-    double t_max = 1;
-    double dt = 0.2;
+    double t_max = 30;
+    double dt = 0.01;
     std::vector<double> x(N,F);//平衡
     //誤差
     x[0] += 0.01;
@@ -70,13 +70,14 @@ int main(){
 
     // loop
     for(double t=0.0;t<=t_max;t+=dt){
-        std::cout << "-------------STEP" << t/dt<< "start-------------"<< std::endl; 
+        //std::cout << "-------------STEP" << t/dt<< "start-------------"<< std::endl; 
         k1 = lorenz96(x, x, 0, F);//２つ目のxはダミーで0によって消える
         k2 = lorenz96(x, k1, dt/2, F);
         k3 = lorenz96(x, k2, dt/2, F);
         k4 = lorenz96(x, k3, dt, F);
         kmid = muler(adder(adder(k1, k4),muler(adder(k2, k3), 2.0)), dt/6);
         x = adder(x, kmid);
+        /*
         std::cout << "k1" << std::endl; 
         printer(k1);
         std::cout << "k2" << std::endl; 
@@ -88,6 +89,7 @@ int main(){
         std::cout << "kmid" << std::endl; 
         printer(kmid);
         std::cout << "x" << std::endl; 
+        */
         printer(x);
     }
     return 0;
