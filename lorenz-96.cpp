@@ -56,7 +56,7 @@ std::vector<double> lorenz96(std::vector<double> v,std::vector<double> k,double 
 int main(){
     //定義
     int N = 40;
-    double F = :.0;
+    double F = 8.0;
     double t_max = 2010;
     double t_th = 2000;
     double dt = 0.01;
