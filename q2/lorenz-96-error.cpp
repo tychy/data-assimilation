@@ -72,8 +72,9 @@ int main(){
     //定義
     int N = 40;
     double F = 8.0;
-    double t_max = 2001;
-    double t_th = 2000;
+    double t_max = 300;
+    double t_th = 100;
+    double t_watch_time = 1;
     double dt = 0.01;
     std::vector<double> x(N,F);//平衡
     //ノイズを入れる
@@ -85,7 +86,8 @@ int main(){
     std::vector<double> kmid(N,0.0);
 
     // loop
-    for(double t=0.0;t<=t_th;t+=dt){
+    double t = 0.0;
+    for(t=0.0;t<=t_th;t+=dt){
         //std::cout << "-------------STEP" << t/dt<< "start-------------"<< std::endl; 
         k1 = lorenz96(x, x, 0, F);//２つ目のxはダミーで0によって消える
         k2 = lorenz96(x, k1, dt/2, F);
@@ -109,29 +111,33 @@ int main(){
     }
     //スピンアップ完了
 
-    //copy
-    std::vector<double> x_copy;
-    std::copy(x.begin(), x.end(), std::back_inserter(x_copy));
-    //誤差を入れる
-    double eps = 0.01;
-    int random_variable = std::rand() % N;
-    x_copy[random_variable] += eps;
-    for(double t=0.0;t<=t_max - t_th;t+=dt){
-        //std::cout << "-------------STEP" << t/dt<< "start-------------"<< std::endl; 
-        k1 = lorenz96(x, x, 0, F);//２つ目のxはダミーで0によって消える
-        k2 = lorenz96(x, k1, dt/2, F);
-        k3 = lorenz96(x, k2, dt/2, F);
-        k4 = lorenz96(x, k3, dt, F);
-        kmid = muler(adder(adder(k1, k4),muler(adder(k2, k3), 2.0)), dt/6);
-        x = adder(x, kmid);
-        //誤差入れたバージョン
-        k1 = lorenz96(x_copy, x_copy, 0, F);//２つ目のxはダミーで0によって消える
-        k2 = lorenz96(x_copy, k1, dt/2, F);
-        k3 = lorenz96(x_copy, k2, dt/2, F);
-        k4 = lorenz96(x_copy, k3, dt, F);
-        kmid = muler(adder(adder(k1, k4),muler(adder(k2, k3), 2.0)), dt/6);
-        x_copy = adder(x_copy, kmid);
-        std::cout << norm(minuser(x, x_copy))<< std::endl;
+    while(t<=t_max){
+        std::cout << "time" << t << std::endl;
+        //copy
+        std::vector<double> x_copy(N);
+        std::copy(x.begin(), x.end(), x_copy.begin());
+        //誤差を入れる
+        double eps = 0.01;
+        int random_variable = std::rand() % N;
+        x_copy[random_variable] += eps;
+        for(double i=0.0;i<=t_watch_time;i+=dt){
+            //std::cout << "-------------STEP" << t/dt<< "start-------------"<< std::endl; 
+            k1 = lorenz96(x, x, 0, F);//２つ目のxはダミーで0によって消える
+            k2 = lorenz96(x, k1, dt/2, F);
+            k3 = lorenz96(x, k2, dt/2, F);
+            k4 = lorenz96(x, k3, dt, F);
+            kmid = muler(adder(adder(k1, k4),muler(adder(k2, k3), 2.0)), dt/6);
+            x = adder(x, kmid);
+            //誤差入れたバージョン
+            k1 = lorenz96(x_copy, x_copy, 0, F);//２つ目のxはダミーで0によって消える
+            k2 = lorenz96(x_copy, k1, dt/2, F);
+            k3 = lorenz96(x_copy, k2, dt/2, F);
+            k4 = lorenz96(x_copy, k3, dt, F);
+            kmid = muler(adder(adder(k1, k4),muler(adder(k2, k3), 2.0)), dt/6);
+            x_copy = adder(x_copy, kmid);
+            std::cout << norm(minuser(x, x_copy))<< std::endl;
+        }
+        t++;
     }
     return 0;
 }
