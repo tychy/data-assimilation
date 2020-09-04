@@ -28,7 +28,7 @@ double gen_norm(){
     return std::sqrt(-2*std::log(gen_mt())) * std::cos(2 * pi * gen_mt());
 }
 std::vector<double> mtv(int s){
-    //s次元の独立な正規分布を作る
+    //sサイトのそれぞれのサイトに置いて独立な正規分布を作る
     std::vector<double> v(s);
     rep(i, s){
         v[i] = gen_norm();
