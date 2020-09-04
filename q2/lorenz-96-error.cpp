@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <vector>
+#include <vector> 
 #include <algorithm>
 #include <cmath>
 #define ll long long
@@ -48,7 +48,7 @@ double norm(std::vector<double> v){
     for (int i = 0; i < v.size(); ++i) {
         accum += v[i] * v[i];
     }
-    return sqrt(accum);
+    return sqrt(accum/v.size());
 }
 std::vector<double> lorenz96(std::vector<double> v,std::vector<double> k,double t, double F){
     //引数　x,kとタイムステップ
@@ -72,9 +72,9 @@ int main(){
     //定義
     int N = 40;
     double F = 8.0;
-    double t_max = 300;
+    double t_max = 2100;
     double t_th = 100;
-    double t_watch_time = 1;
+    double t_watch_time = 20;
     double dt = 0.01;
     std::vector<double> x(N,F);//平衡
     //ノイズを入れる
@@ -117,7 +117,7 @@ int main(){
         std::vector<double> x_copy(N);
         std::copy(x.begin(), x.end(), x_copy.begin());
         //誤差を入れる
-        double eps = 0.01;
+        double eps = 0.001;
         int random_variable = std::rand() % N;
         x_copy[random_variable] += eps;
         for(double i=0.0;i<=t_watch_time;i+=dt){
@@ -137,7 +137,7 @@ int main(){
             x_copy = adder(x_copy, kmid);
             std::cout << norm(minuser(x, x_copy))<< std::endl;
         }
-        t++;
+        t += t_watch_time;
     }
     return 0;
 }

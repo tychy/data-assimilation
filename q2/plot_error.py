@@ -26,7 +26,7 @@ def main():
     x_mean = np.zeros((x[0].shape[0],), dtype=float)
     for i in range(len(x)):
         x_mean += x[i]
-    plt.plot(x_mean/len(x), label='mean')
+    plt.plot(x_mean/(len(x)), label='mean')
     plt.grid(which='major',color='black',linestyle='-')
     plt.legend()
     plt.savefig('error.png')
