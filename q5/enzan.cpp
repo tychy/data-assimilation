@@ -4,11 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-using namespace std;
-#define ll long long
+#include "enzan.h"
 #define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
-#define Graph vector<vector<int>>;
-#define iterG(next_v, G, v) for(auto next_v : G[v]
 //ベクトル演算
 std::vector<double> adder(std::vector<double> v1, std::vector<double> v2){
     //vector全体の加算器
@@ -24,10 +21,10 @@ std::vector<double> muler(std::vector<double> v1, double s){
     }
     return v3;
 }
-std::vector<std::vector <double>> transpose(vector<vector<double> > b){
+std::vector<std::vector <double>> transpose(std::vector<std::vector<double> > b){
     if (b.size() == 0)
         return b;
-    vector<vector<double> > trans_vec(b[0].size(), vector<double>());
+    std::vector<std::vector<double> > trans_vec(b[0].size(), std::vector<double>());
     for (int i = 0; i < b.size(); i++){
         for (int j = 0; j < b[i].size(); j++){
             trans_vec[j].push_back(b[i][j]);
@@ -162,40 +159,4 @@ std::vector<double> Axeqb(const std::vector<std::vector<double>> &v, std::vector
     return x;
 }
 
-
-int main(){
-    int N = 3;
-    std::vector<std::vector <double>> pf = genZ(N);
-    std::vector<std::vector <double>> pa = genI(N);
-    std::vector<double> x(N, 1.0);
-    pf[0][0] += 2;
-    pf[0][1] += -2;
-    pf[0][2] += 3;
-    pf[1][0] += 3;
-    pf[1][1] += 2;
-    pf[1][2] += -4;
-    pf[2][0] += 4;
-    pf[2][1] += -3;
-    pf[2][2] += 2;
-    
-    x[0] = 7;
-    x[1] = -5;
-    x[2] =  4;
-    pa[0][0] += 1;
-    std::cout << "A" << std::endl;
-    printernn(pf);
-    std::cout << "B" << std::endl;
-    printernn(pa);
-    std::cout << "A^T" << std::endl;
-    printernn(transpose(pf));
-    std::cout << "A+B" << std::endl;
-    printernn(pf*pa);
-    std::cout << "x" << std::endl;
-    printer(x);
-
-    std::cout << "Ax = b then x?" << std::endl;
-    printer(Axeqb(pf, x));
-
-    return 0;
-}
 
