@@ -10,6 +10,20 @@ using namespace std;
 #define Graph vector<vector<int>>;
 #define iterG(next_v, G, v) for(auto next_v : G[v]
 //ベクトル演算
+std::vector<double> adder(std::vector<double> v1, std::vector<double> v2){
+    //vector全体の加算器
+    std::vector<double> v3;
+    std::transform(v1.begin(), v1.end(), v2.begin(), std::back_inserter(v3), std::plus<double>());
+    return v3;
+}
+std::vector<double> muler(std::vector<double> v1, double s){
+    //vector全体の加算器
+    std::vector<double> v3(v1.size());
+    rep(i, v1.size()){
+        v3[i] = v1[i] * s;
+    }
+    return v3;
+}
 std::vector<std::vector <double>> transpose(vector<vector<double> > b){
     if (b.size() == 0)
         return b;
@@ -49,6 +63,21 @@ std::vector<std::vector <double>> operator+(const std::vector<std::vector <doubl
     }
     return ans;
 }
+std::vector<double> operator-(const std::vector<double> &v1,const std::vector<double> &v2){
+    //1d
+    std::vector<double> ans = v1;
+    rep(i, v1.size())
+        ans[i] -= v2[i];
+    return ans;
+}
+std::vector<std::vector <double>> operator-(const std::vector<std::vector <double>> &v1,const std::vector<std::vector <double>> &v2){
+    //2d
+    std::vector<std::vector <double>> ans = genZ(v1.size());   
+    rep(i, v1.size()){
+        ans[i] = v1[i] - v2[i];
+    }
+    return ans;
+}
 double operator*(const std::vector<double> &v1,const std::vector<double> &v2){
     //1d ちょっと特殊 n * n = scalar
     double ans = 0.0;
@@ -68,6 +97,7 @@ std::vector<std::vector <double>> operator*(const std::vector<std::vector <doubl
     }
     return ans;
 }
+
 void printer(std::vector<double> v){
     rep(i, v.size()-1){
         std::cout << v[i] << " ";
@@ -79,14 +109,78 @@ void printernn(std::vector<std::vector <double>> v){
     rep(i, v.size())
         printer(v.at(i));
 }
+std::vector<double> Axeqb(const std::vector<std::vector<double>> &v, std::vector<double> &b){
+    //Ax = bのxを返す
+    int N = b.size();
+    std::vector<std::vector<double>> A_c = v;
+    std::vector<double> x(N, 0.0);
+    std::vector<double> buff(N, 0.0);//枢軸の入れ替え用のバッファ
+    std::vector<double> b_c = b;
+
+    //std::vector<int> p(N, 0);//枢軸の操作
+    //rep(i, N)
+    //    p[i] = i;
+    int p_cur;
+    double p_max, ans, s;
+    rep(i, N-1){
+        p_max = A_c[i][i];
+        p_cur = i;
+        for(int j=i;j<N;j++){
+            if (A_c[j][i] > p_max){
+                p_max = A_c[j][i];
+                p_cur = j;
+            }
+        }
+        //もしp_maxが0ならば正則出ないと言えるのでエラーを出したい
+        //入れ替え
+        if(p_cur != i){
+            //A_c b_c 
+            buff = A_c[i];
+            A_c[i] = A_c[p_cur];
+            A_c[p_cur] = buff;
+
+            s = b_c[i];
+            b_c[i] = b_c[p_cur];
+            b_c[p_cur] = s;
+        }
+
+        //前進消去
+        for(int k=i+1;k<N;k++){
+            b_c[k] = b_c[k] - b_c[i] * A_c[k][i]/A_c[i][i];
+            A_c[k] = A_c[k] - muler(A_c[i], A_c[k][i]/A_c[i][i]);
+        }
+    }
+    //後退代入
+    for(int i = N-1;i >= 0;i--){
+        ans = b_c[i];
+        for(int k = i + 1;k < N;k++){
+            ans -= A_c[i][k] * x[k];
+        }
+        ans = ans / A_c[i][i];
+        x[i] = ans;
+    }
+    return x;
+}
+
 
 int main(){
-    int N = 2;
-    std::vector<std::vector <double>> pf = genI(N);
+    int N = 3;
+    std::vector<std::vector <double>> pf = genZ(N);
     std::vector<std::vector <double>> pa = genI(N);
-    pf[0][0] += 1;
-    pf[1][0] += 1;
-
+    std::vector<double> x(N, 1.0);
+    pf[0][0] += 2;
+    pf[0][1] += -2;
+    pf[0][2] += 3;
+    pf[1][0] += 3;
+    pf[1][1] += 2;
+    pf[1][2] += -4;
+    pf[2][0] += 4;
+    pf[2][1] += -3;
+    pf[2][2] += 2;
+    
+    x[0] = 7;
+    x[1] = -5;
+    x[2] =  4;
     pa[0][0] += 1;
     std::cout << "A" << std::endl;
     printernn(pf);
@@ -96,6 +190,12 @@ int main(){
     printernn(transpose(pf));
     std::cout << "A+B" << std::endl;
     printernn(pf*pa);
+    std::cout << "x" << std::endl;
+    printer(x);
+
+    std::cout << "Ax = b then x?" << std::endl;
+    printer(Axeqb(pf, x));
+
     return 0;
 }
 
