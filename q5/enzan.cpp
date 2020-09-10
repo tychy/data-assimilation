@@ -87,8 +87,6 @@ std::vector<std::vector <double>> operator*(const std::vector<std::vector <doubl
     //v1[0].size != v2.sizeのときアラートを出したい
     std::vector<std::vector <double>> ans(v1.size());   
     std::vector<std::vector <double>> mid = transpose(v2);
-    std::cout << "mid" << " size" << mid.size() << std::endl;
-    printernn(mid);
     rep(i, mid.size()){
             rep(j, v1.size()){
                 ans[j].push_back(v1[j] * mid[i]);
