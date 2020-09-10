@@ -84,14 +84,16 @@ double operator*(const std::vector<double> &v1,const std::vector<double> &v2){
 }
 std::vector<std::vector <double>> operator*(const std::vector<std::vector <double>> &v1,const std::vector<std::vector <double>> &v2){
     //2d
-    std::vector<std::vector <double>> ans = genZ(v1.size());   
-    std::vector<std::vector <double>> mid = transpose(v2);  
-
-    rep(i, v1.size()){
-        rep(j, v1[i].size()){
-            ans[i][j] = v1[i] * mid[j];
+    //v1[0].size != v2.sizeのときアラートを出したい
+    std::vector<std::vector <double>> ans(v1.size());   
+    std::vector<std::vector <double>> mid = transpose(v2);
+    std::cout << "mid" << " size" << mid.size() << std::endl;
+    printernn(mid);
+    rep(i, mid.size()){
+            rep(j, v1.size()){
+                ans[j].push_back(v1[j] * mid[i]);
+            }
         }
-    }
     return ans;
 }
 
