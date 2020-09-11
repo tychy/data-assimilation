@@ -145,6 +145,7 @@ std::vector<double> Axeqb(const std::vector<std::vector<double>> &v, std::vector
         for(int k=i+1;k<N;k++){
             b_c[k] = b_c[k] - b_c[i] * A_c[k][i]/A_c[i][i];
             A_c[k] = A_c[k] - muler(A_c[i], A_c[k][i]/A_c[i][i]);
+
         }
     }
     //後退代入
