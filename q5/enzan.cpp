@@ -119,7 +119,7 @@ void printernn(std::vector<std::vector <double>> v){
     rep(i, v.size())
         printer(v.at(i));
 }
-std::vector<double> Axeqb(const std::vector<std::vector<double>> &v, std::vector<double> &b){
+std::vector<double> Axeqb(std::vector<std::vector<double>> v, std::vector<double> b){
     //Ax = bのxを返す
     int N = b.size();
     std::vector<std::vector<double>> A_c = v;

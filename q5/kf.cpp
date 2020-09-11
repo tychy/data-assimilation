@@ -71,11 +71,14 @@ std::vector<double> M_6h(std::vector<double> x){
 int main(){
     int N = 40;
     int p = 40;
-    int num;
+    double num;
 
     std::vector<double> xf(N,0.0);
     std::vector<double> xa(N,0.0);
-    std::vector<double> y(p,0.0);
+    std::vector<double> mida(p,0.0);
+    std::vector<double> midb(p,0.0);
+    std::vector<double> midc(p,0.0);
+
 
     std::vector<std::vector <double>> pf = genI(N);
     std::vector<std::vector <double>> pa = genI(N);
@@ -85,13 +88,20 @@ int main(){
     std::ifstream infile("datawithnoise.dat");
     std::string line;
     //printernn(pf);    
+    std::cout << "session start" << std::endl;
     for(int i=0;i<1460;i++){
         //yの読み込み
+        std::vector<double> y;
         std::getline(infile, line);
         std::istringstream iss(line);
-        while (line >> num) y.push_back(num);
-
-        Ky = pf * transpose(H) * Axeqb(H * pf * transpose(H) + R, y - retranspose1d(H * transpose1d(xf)));
+        while (iss >> num) y.push_back(num);
+        std::cout << "y loaded size" << y.size() << std::endl;
+        printer(y);
+        mida = retranspose1d(H * transpose1d(xf));
+        std::cout << "mid loaded" << std::endl;
+        printer(mida);
+        midb = y - mida;
+        Ky = pf * transpose(H) * transpose1d(Axeqb(H * pf * transpose(H) + R, midb));
         xa = xf + retranspose1d(Ky);
         printer(xf);
         xf = M_6h(xf);
