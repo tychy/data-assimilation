@@ -1,5 +1,6 @@
 #include <iostream>
 #include <complex>
+#include <fstream>
 #include <string>
 #include <map>
 #include <vector>
@@ -10,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include "enzan.h"
 #define ll long long
 #define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
 #define Graph vector<vector<int>>;
@@ -68,19 +70,32 @@ std::vector<double> M_6h(std::vector<double> x){
 
 int main(){
     int N = 40;
+    int p = 40;
+    int num;
+
     std::vector<double> xf(N,0.0);
     std::vector<double> xa(N,0.0);
+    std::vector<double> y(p,0.0);
+
     std::vector<std::vector <double>> pf = genI(N);
     std::vector<std::vector <double>> pa = genI(N);
     std::vector<std::vector <double>> R = genI(N);
     std::vector<std::vector <double>> H = genI(N);
-    std::vector<std::vector <double>> K = genZ(N);
+    std::vector<std::vector <double>> Ky;
+    std::ifstream infile("datawithnoise.dat");
+    std::string line;
     //printernn(pf);    
     for(int i=0;i<1460;i++){
-        Ky = pf * transpose(H) * Axeqb(H * pf * transpose(H) + R, y - H * xf);
-        xa = xf + Ky;
+        //yの読み込み
+        std::getline(infile, line);
+        std::istringstream iss(line);
+        while (line >> num) y.push_back(num);
+
+        Ky = pf * transpose(H) * Axeqb(H * pf * transpose(H) + R, y - retranspose1d(H * transpose1d(xf)));
+        xa = xf + retranspose1d(Ky);
         printer(xf);
         xf = M_6h(xf);
+        printer(xf);
     }
     return 0;
 }

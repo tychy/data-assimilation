@@ -32,7 +32,20 @@ std::vector<std::vector <double>> transpose(std::vector<std::vector<double> > b)
     }
     return trans_vec;
 }
-
+std::vector<std::vector <double>> transpose1d(std::vector<double> b){
+    std::vector<std::vector<double> > trans_vec(b.size(), std::vector<double>(1));
+    for (int i = 0; i < b.size(); i++){
+        trans_vec[i][0] = b[i];
+    }
+    return trans_vec;
+}
+std::vector<double> retranspose1d(std::vector<std::vector<double>> b){
+    std::vector<double> trans_vec(b.size());
+    for (int i = 0; i < b.size(); i++){
+        trans_vec[i] = b[i][0];
+    }
+    return trans_vec;
+}
 std::vector<std::vector <double>> genI(int N){
     std::vector<std::vector <double>> I(N, std::vector<double>(N,0.0));
     rep(i, N){
