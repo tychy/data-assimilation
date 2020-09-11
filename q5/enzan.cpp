@@ -21,6 +21,15 @@ std::vector<double> muler(std::vector<double> v1, double s){
     }
     return v3;
 }
+std::vector<std::vector<double>> mulernn(std::vector<std::vector<double>> v1, double s){
+    //vector全体の加算器
+    std::vector<std::vector<double>> v3(v1.size());
+    rep(i, v1.size()){
+        rep(j, v1[i].size())
+            v3[i].push_back(v1[i][j] * s);
+    }
+    return v3;
+}
 std::vector<std::vector <double>> transpose(std::vector<std::vector<double> > b){
     if (b.size() == 0)
         return b;

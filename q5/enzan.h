@@ -5,6 +5,7 @@
 
 std::vector<double> adder(std::vector<double> v1, std::vector<double> v2);
 std::vector<double> muler(std::vector<double> v1, double s);
+std::vector<std::vector<double>> mulernn(std::vector<std::vector<double>> v1, double s);
 std::vector<std::vector <double>> transpose(std::vector<std::vector<double> > b);
 std::vector<std::vector <double>> transpose1d(std::vector<double> b);
 std::vector<double> retranspose1d(std::vector<std::vector<double>> b);

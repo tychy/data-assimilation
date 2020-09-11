@@ -22,7 +22,7 @@ double norm(std::vector<double> v){
     for (int i = 0; i < v.size(); ++i) {
         accum += v[i] * v[i];
     }
-    return sqrt(accum);
+    return sqrt(accum/v.size());
 }
 std::vector<double> lorenz96(std::vector<double> v,std::vector<double> k,double t, double F){
     //引数　x,kとタイムステップ
@@ -74,38 +74,48 @@ int main(){
     double num;
 
     std::vector<double> xf(N,0.0);
-    std::vector<double> xa(N,0.0);
+    std::vector<double> xa(N,1.0);
     std::vector<double> mida(p,0.0);
     std::vector<double> midb(p,0.0);
     std::vector<double> midc(p,0.0);
 
-
     std::vector<std::vector <double>> pf = genI(N);
-    std::vector<std::vector <double>> pa = genI(N);
+    std::vector<std::vector <double>> pa = mulernn(genI(N), 25);
     std::vector<std::vector <double>> R = genI(N);
     std::vector<std::vector <double>> H = genI(N);
     std::vector<std::vector <double>> Ky;
     std::ifstream infile("datawithnoise.dat");
     std::string line;
+    std::ifstream truedat("gendata.dat");
+    std::string trueline;
+
     //printernn(pf);    
-    std::cout << "session start" << std::endl;
     for(int i=0;i<1460;i++){
         //yの読み込み
         std::vector<double> y;
+        std::vector<double> xt;
+
         std::getline(infile, line);
         std::istringstream iss(line);
         while (iss >> num) y.push_back(num);
-        std::cout << "y loaded size" << y.size() << std::endl;
-        printer(y);
+
+        std::getline(truedat, trueline);
+        std::istringstream issxt(trueline);
+        while (issxt >> num) xt.push_back(num);
+
         mida = retranspose1d(H * transpose1d(xf));
-        std::cout << "mid loaded" << std::endl;
-        printer(mida);
         midb = y - mida;
         Ky = pf * transpose(H) * transpose1d(Axeqb(H * pf * transpose(H) + R, midb));
+        // xaの初期値は適当に持ってこないと
         xa = xf + retranspose1d(Ky);
-        printer(xf);
-        xf = M_6h(xf);
-        printer(xf);
+        bool plz = false;
+        if(plz){
+            printer(xf);
+        }else{
+            std::cout << norm(xt - xa) << std::endl;
+        }
+        xf = M_6h(xa);
+
     }
     return 0;
 }
