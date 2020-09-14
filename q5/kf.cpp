@@ -115,7 +115,7 @@ int main(){
         pa = pf - pf * transpose(H) * Axeqb(H * pf * transpose(H) + R, H * pf);
         // MTを求める
         rep(j, N){
-            MT[j] = muler(M_6h(xa +  genpulse(N, delta)) - M_6h(xa), 1.0 / delta);
+            MT[j] = muler(M_6h(xa +  genpulse(N, j,delta)) - M_6h(xa), 1.0 / delta);
         }
         bool plz = false;
         if(plz){

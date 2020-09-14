@@ -55,9 +55,9 @@ std::vector<double> retranspose1d(std::vector<std::vector<double>> b){
     }
     return trans_vec;
 }
-std::vector<double> genpulse(int N,double delta){
+std::vector<double> genpulse(int N, int target, double delta){
     std::vector<double> I(N,0.0);
-    I[i] += delta;
+    I[target] += delta;
     return I;
 }
 std::vector<std::vector <double>> genI(int N){
