@@ -112,7 +112,7 @@ int main(){
         Ky = pf * transpose(H) * transpose1d(Axeqb(H * pf * transpose(H) + R, midb));
         // xaの初期値は適当に持ってこないと
         xa = xf + retranspose1d(Ky);
-        pa = pf - pf * transpose(H) * Axeqb(H * pf * transpose(H) + R, H * pf);
+        pa = pf - pf * transpose(H) * inverse(H * pf * transpose(H) + R) * H * pf;
         // MTを求める
         rep(j, N){
             MT[j] = muler(M_6h(xa +  genpulse(N, j,delta)) - M_6h(xa), 1.0 / delta);
