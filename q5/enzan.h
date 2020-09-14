@@ -9,6 +9,7 @@ std::vector<std::vector<double>> mulernn(std::vector<std::vector<double>> v1, do
 std::vector<std::vector <double>> transpose(std::vector<std::vector<double> > b);
 std::vector<std::vector <double>> transpose1d(std::vector<double> b);
 std::vector<double> retranspose1d(std::vector<std::vector<double>> b);
+std::vector<double> genpulse(int N,double delta);
 std::vector<std::vector <double>> genI(int N);
 std::vector<std::vector <double>> genZ(int N);
 std::vector<double> operator+(const std::vector<double> &v1,const std::vector<double> &v2);
