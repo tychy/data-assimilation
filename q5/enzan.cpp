@@ -31,6 +31,7 @@ std::vector<std::vector<double>> mulernn(std::vector<std::vector<double>> v1, do
     return v3;
 }
 std::vector<std::vector <double>> transpose(std::vector<std::vector<double> > b){
+    //nm行列をmn行列にする
     if (b.size() == 0)
         return b;
     std::vector<std::vector<double> > trans_vec(b[0].size(), std::vector<double>());
@@ -42,6 +43,7 @@ std::vector<std::vector <double>> transpose(std::vector<std::vector<double> > b)
     return trans_vec;
 }
 std::vector<std::vector <double>> transpose1d(std::vector<double> b){
+    //1次元ベクトルをN*1行列に変換する関数
     std::vector<std::vector<double> > trans_vec(b.size(), std::vector<double>(1));
     for (int i = 0; i < b.size(); i++){
         trans_vec[i][0] = b[i];
@@ -49,6 +51,7 @@ std::vector<std::vector <double>> transpose1d(std::vector<double> b){
     return trans_vec;
 }
 std::vector<double> retranspose1d(std::vector<std::vector<double>> b){
+    //N*1行列を単なるベクトルに変換する関数
     std::vector<double> trans_vec(b.size());
     for (int i = 0; i < b.size(); i++){
         trans_vec[i] = b[i][0];
