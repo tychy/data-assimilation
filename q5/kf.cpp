@@ -72,6 +72,7 @@ int main(){
     int N = 40;
     int p = 40;
     double num;
+    double delta = 0.01;
 
     std::vector<double> xf(N,0.0);
     std::vector<double> xa(N,1.0);
@@ -84,6 +85,9 @@ int main(){
     std::vector<std::vector <double>> R = genI(N);
     std::vector<std::vector <double>> H = genI(N);
     std::vector<std::vector <double>> Ky;
+    std::vector<std::vector <double>> MT(N);//まず転置を定義した
+
+    // ファイルの読み書きについての定義
     std::ifstream infile("datawithnoise.dat");
     std::string line;
     std::ifstream truedat("gendata.dat");
@@ -108,6 +112,11 @@ int main(){
         Ky = pf * transpose(H) * transpose1d(Axeqb(H * pf * transpose(H) + R, midb));
         // xaの初期値は適当に持ってこないと
         xa = xf + retranspose1d(Ky);
+        pa = pf - pf * transpose(H) * Axeqb(H * pf * transpose(H) + R, H * pf);
+        // MTを求める
+        rep(j, N){
+            MT[j] = muler(M_6h(xa +  genpulse(N, delta)) - M_6h(xa), 1.0 / delta);
+        }
         bool plz = false;
         if(plz){
             printer(xf);
@@ -115,6 +124,7 @@ int main(){
             std::cout << norm(xt - xa) << std::endl;
         }
         xf = M_6h(xa);
+        pf = transpose(MT) * pa * MT;
 
     }
     return 0;
