@@ -1,5 +1,10 @@
 kf: enzan.o kf.o
 	g++ -o kf enzan.o kf.o
+3henbun: enzan.o 3henbun.o
+	g++ -o 3henbun enzan.o 3henbun.o
+3henbun.o: 3henbun.cpp
+	g++ -c 3henbun.cpp
+
 test: enzan.o test.o
 	g++ -o enzan enzan.o enzan_test.o
 kf.o: kf.cpp
