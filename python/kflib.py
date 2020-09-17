@@ -19,7 +19,7 @@ def l96_model(x, t):
 def l96_step(x, step):
     dt = 0.01
     hdt = dt /2
-    t = np.arange(0.0, step+0.01, dt)
+    t = np.arange(0.0, step, dt)
     x_ls = []
     for _ in t:
         k1 = l96_model(x, t)
@@ -28,7 +28,7 @@ def l96_step(x, step):
         k4 = l96_model(x+k3 * dt, t)
         x = x + (k1+2*k2 + 2*k3 + k4)*dt/6
         x_ls.append(x)
-    return np.array(x_ls)[1:]
+    return np.array(x_ls)
 
 
 def kf_forecast(xa, pa,R,H, param=1.0):
