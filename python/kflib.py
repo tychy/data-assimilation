@@ -74,8 +74,6 @@ def kf(x_last, data, datawithnoise, step=100, param=1.0, del_key=[]):
     yrmse = []
     isappend = False
     for i in range(step * 5):
-        if i % 500 == 0:
-            print(i / 500)
         if i % 5 == 0:
             H = H_del
             isappend = True
