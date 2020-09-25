@@ -66,28 +66,36 @@ def kf(x_last, data, datawithnoise, step=100, param=1.0, del_key=[]):
     Z = np.zeros_like(I)
     H_del = np.eye(N)
     H_del = np.delete(H_del, del_key, 0)
+    Z_del = np.delete(Z, del_key, 0)
 
     xferror_before_assim = []
     xferror_after_assim = []
     trpa = []
     yrmse = []
+    isappend = False
     for i in range(step * 5):
+        if i % 500 == 0:
+            print(i / 500)
         if i % 5 == 0:
             H = H_del
+            isappend = True
         else:
-            H = Z
+            H = Z_del
+            isappend = False
         R = np.eye(H.shape[0])
         yt = data[i // 5]
         y = np.array(datawithnoise[i // 5])
         y = np.delete(y, del_key)
 
         xf, pf = kf_forecast(xa, pa, R, H, param)
-        xferror_before_assim.append(np.sqrt(mean_squared_error(yt, xf)))
+        if isappend:
+            xferror_before_assim.append(np.sqrt(mean_squared_error(yt, xf)))
         K = pf @ H.T @ np.linalg.inv(H @ pf @ H.T + R)
         xa = xf + K @ (y - H @ xf)
         pa = (np.eye(N) - K @ H) @ pf
-        xferror_after_assim.append(np.sqrt(mean_squared_error(yt, xa)))
-        trpa.append(np.sqrt(np.trace(pa) / N))
+        if isappend:
+            xferror_after_assim.append(np.sqrt(mean_squared_error(yt, xa)))
+            trpa.append(np.sqrt(np.trace(pa) / N))
     return xferror_before_assim, xferror_after_assim, trpa
 
 
