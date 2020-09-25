@@ -1,4 +1,3 @@
-from tqdm.notebook import tqdm_notebook as tqdm
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -72,13 +71,11 @@ def kf(x_last, data, datawithnoise, step=100, param=1.0, del_key=[]):
     xferror_after_assim = []
     trpa = []
     yrmse = []
-    for i in tqdm(range(step * 5)):
+    for i in range(step * 5):
         if i % 5 == 0:
             H = H_del
         else:
             H = Z
-            xa = l96_step(xa, 0.01)[-1]
-            continue
         R = np.eye(H.shape[0])
         yt = data[i // 5]
         y = np.array(datawithnoise[i // 5])
@@ -113,7 +110,7 @@ def henbun(x_last, data, datawithnoise, step=100, del_key=[]):
     yrmse = []
     H_del = np.eye(N)
     H_del = np.delete(H_del, del_key, 0)
-    for i in tqdm(range(step * 5)):
+    for i in range(step * 5):
         if i % 5 == 0:
             H = H_del
         else:
