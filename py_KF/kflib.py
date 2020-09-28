@@ -103,7 +103,7 @@ def henbun_forecast(xa, pa):
     return xf, pa
 
 
-def henbun(x_last, data, datawithnoise, step=100, del_key=[]):
+def henbun(x_last, data, datawithnoise, step=100, del_num=0):
     # 初期値
     pa = np.eye(N)
     rs = 0.05 * int(np.random.randint(1, 1000))
@@ -115,6 +115,7 @@ def henbun(x_last, data, datawithnoise, step=100, del_key=[]):
     xferror_after_assim = []
     trpa = []
     yrmse = []
+    del_key = np.random.choice(N, del_num, replace=False)
     H_del = np.eye(N)
     H_del = np.delete(H_del, del_key, 0)
     for i in range(step * 5):
