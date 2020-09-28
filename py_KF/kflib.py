@@ -57,7 +57,7 @@ def henbun_forecast(xa, pa):
     return xf, pa
 
 
-def kf(x_last, data, datawithnoise, step=100, param=1.0, del_key=[]):
+def kf(x_last, data, datawithnoise, step=100, param=1.0, del_num=0):
     # 初期値
     pa = np.eye(N) * 25
     rs = 0.05 * int(np.random.randint(1, 1000))
@@ -65,6 +65,7 @@ def kf(x_last, data, datawithnoise, step=100, param=1.0, del_key=[]):
     I = np.eye(N)
     Z = np.zeros_like(I)
     H_del = np.eye(N)
+    del_key = np.random.choice(N, del_num, replace=False)
     H_del = np.delete(H_del, del_key, 0)
     Z_del = np.delete(Z, del_key, 0)
 
