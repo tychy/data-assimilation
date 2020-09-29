@@ -30,9 +30,14 @@ else:
     datawithnoise = np.loadtxt("datawithnoise.txt")
 
 m = 40
-inflation = 1.0
-xferror_before_assim, xferror_after_assim = po(
-    x_last, data, datawithnoise, step=100, del_num=0, m=m, inflation=inflation
-)
-plt.plot(xferror_after_assim)
-plt.savefig("po_m{}_inflation{}.png".format(m, inflation))
+inflation_ls = [1.0, 1.05, 1.1, 1.2, 1.3, 1.5]
+fig = plt.figure()
+for inflation in inflation_ls:
+    xferror_before_assim, xferror_after_assim = po(
+        x_last, data, datawithnoise, step=500, del_num=0, m=m, inflation=inflation
+    )
+    np.savetxt("po_m{}_inflation{}.txt".format(m, inflation), xferror_after_assim)
+
+    plt.plot(xferror_after_assim, label="po_m{}_inflation{}".format(m, inflation))
+plt.legend()
+plt.savefig("po_run.png")
