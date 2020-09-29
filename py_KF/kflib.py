@@ -18,10 +18,10 @@ def l96_model(x, t):
     return d
 
 
-def l96_step(x, step):
+def l96_step(x, tend):
     dt = 0.01
     hdt = dt / 2
-    t = np.arange(0.0, step, dt)
+    t = np.arange(0.0, tend, dt)
     x_ls = []
     for _ in t:
         k1 = l96_model(x, t)
@@ -103,9 +103,9 @@ def henbun_forecast(xa, pa):
     return xf, pa
 
 
-def henbun(x_last, data, datawithnoise, step=100, del_num=0):
+def henbun(x_last, data, datawithnoise, step=100, del_num=0, B=np.eye(N)):
     # 初期値
-    pa = np.eye(N)
+    pa = B
     rs = 0.05 * int(np.random.randint(1, 1000))
     xa = l96_step(x_last, rs)[-1]
     H = np.eye(N)
@@ -137,3 +137,41 @@ def henbun(x_last, data, datawithnoise, step=100, del_num=0):
         xferror_after_assim.append(np.sqrt(mean_squared_error(yt, xa)))
         trpa.append(np.sqrt(np.trace(pa) / N))
     return xferror_before_assim, xferror_after_assim, trpa
+
+
+def henbun_with_xa(x_last, data, datawithnoise, step=100, del_num=0, B=np.eye(N)):
+    # 初期値
+    pa = B
+    rs = 0.05 * int(np.random.randint(1, 1000))
+    xa = l96_step(x_last, rs)[-1]
+    H = np.eye(N)
+    Z = np.zeros((N, N))
+
+    xferror_before_assim = []
+    xferror_after_assim = []
+    trpa = []
+    yrmse = []
+    xa_ls = []
+    del_key = np.random.choice(N, del_num, replace=False)
+    H_del = np.eye(N)
+    H_del = np.delete(H_del, del_key, 0)
+    for i in range(step * 5):
+        if i % 5 == 0:
+            H = H_del
+        else:
+            H = Z
+            xa = l96_step(xa, 0.01)[-1]
+            continue
+        R = np.eye(H.shape[0])
+        yt = data[i // 5]
+        y = np.array(datawithnoise[i // 5])
+        y = np.delete(y, del_key)
+
+        xf, pf = henbun_forecast(xa, pa)
+        xferror_before_assim.append(np.sqrt(mean_squared_error(yt, xf)))
+        K = pf @ H.T @ np.linalg.inv(H @ pf @ H.T + R)
+        xa = xf + K @ (y - H @ xf)
+        xferror_after_assim.append(np.sqrt(mean_squared_error(yt, xa)))
+        trpa.append(np.sqrt(np.trace(pa) / N))
+        xa_ls.append(xa)
+    return xferror_before_assim, xferror_after_assim, trpa, xa_ls
