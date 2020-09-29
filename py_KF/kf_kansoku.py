@@ -31,7 +31,7 @@ else:
 
 def find_best_alpha(del_num):
     # initialize
-    step = 200
+    step = 400
     hani = np.arange(1.0, 2.0, 0.01)
     kf_before_ls, kf_after_ls, x_ls = [], [], []
     min_alpha = 10
