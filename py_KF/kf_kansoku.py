@@ -32,7 +32,7 @@ else:
 def find_best_alpha(del_num):
     # initialize
     step = 400
-    hani = np.arange(1.0, 2.0, 0.01)
+    hani = np.arange(1.0, 2.0, 0.05)
     kf_before_ls, kf_after_ls, x_ls = [], [], []
     min_alpha = 10
     min_idx = 0.0
@@ -57,7 +57,7 @@ def find_best_alpha(del_num):
 # RMSEを入れる
 kf_kansoku = []
 henbun_kansoku = []
-for del_num in range(30):
+for del_num in range(35):
     x_ls, kf_before_ls, kf_after_ls, min_idx, min_alpha = find_best_alpha(del_num)
     kf_kansoku.append(min_alpha)
 plt.plot(kf_kansoku, label="kf")
